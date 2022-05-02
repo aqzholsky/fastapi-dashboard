@@ -4,3 +4,8 @@ python-decouple==3.6
 uvicorn==0.17.4
 Faker==8.0.0
 odmantic==0.4.0
+passlib==1.7.4
+python-jose==3.3.0
+bcrypt==3.2.2
+cryptography==36.0.2
+python-multipart==0.0.5

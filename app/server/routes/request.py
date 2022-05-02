@@ -30,8 +30,8 @@ async def get_requests():
 async def get_request_data(id):
     request = await retrieve_request(id)
     if request:
-        return ResponseModel(request, "Student data retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "Student doesn't exist.")
+        return ResponseModel(request, "Request data retrieved successfully")
+    return ErrorResponseModel("An error occurred.", 404, "Request doesn't exist.")
 
 
 @router.put("/{id}")
@@ -50,7 +50,7 @@ async def update_request_data(id: str, req: RequestUpdateSchema = Body(...)):
     )
 
 
-@router.delete("/{id}", response_description="Student data deleted from the database")
+@router.delete("/{id}", response_description="Request data deleted from the database")
 async def delete_request_data(id: str):
     deleted_request = await delete_request(id)
     if deleted_request:
