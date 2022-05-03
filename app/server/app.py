@@ -1,15 +1,9 @@
 from fastapi import FastAPI
-
-from app.server.routes import (
-    AuthenticationRouter,
-    CompanyRouter,
-    RequestRouter,
-    RobotRouter,
-    RequestStatisticsRouter,
-)
-from app.server.routes import (AuthenticationRouter, CompanyRouter,
-                               RequestRouter, RobotRouter, RequestStatisticsRouter)
 from starlette.middleware.cors import CORSMiddleware
+
+from app.server.routes import (AuthenticationRouter, CompanyRouter,
+                               RequestRouter, RequestStatisticsRouter,
+                               RobotRouter)
 
 app = FastAPI()
 

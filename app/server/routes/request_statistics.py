@@ -1,24 +1,15 @@
-from fastapi import APIRouter, Body, Depends
-from fastapi.encoders import jsonable_encoder
 from typing import List
 
-from app.server.models import (
-    ErrorResponseModel,
-    User,
-)
+from fastapi import APIRouter, Body, Depends
+from fastapi.encoders import jsonable_encoder
 
-from app.server.repository import (
-    get_current_user,
-    help_daily_requests_by_status,
-    help_daily_requests_of_last_month,
-    daily_requests_by_status,
-    daily_requests_of_last_month,
-)
-
-from app.server.models import (
-    DailyRequestsByStatus,
-    DailyRequestsOfLastMonth,
-)
+from app.server.models import (DailyRequestsByStatus, DailyRequestsOfLastMonth,
+                               ErrorResponseModel, User)
+from app.server.repository import (daily_requests_by_status,
+                                   daily_requests_of_last_month,
+                                   get_current_user,
+                                   help_daily_requests_by_status,
+                                   help_daily_requests_of_last_month)
 
 router = APIRouter()
 

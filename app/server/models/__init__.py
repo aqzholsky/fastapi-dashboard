@@ -2,8 +2,9 @@ from .authentication import (Token, TokenData, User, UserInDB, UserLogin,
                              UserRegistration)
 from .company import Company
 from .request import RequestSchema, RequestUpdateSchema, Status
-from .robot import Robot, RobotState
 from .request_statistics import DailyRequestsByStatus, DailyRequestsOfLastMonth
+from .robot import Robot, RobotState
+
 
 def ResponseModel(data, message):
     return {

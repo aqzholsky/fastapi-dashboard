@@ -1,10 +1,11 @@
 import random
+
 import faker
 
 faker = faker.Faker()
 
-from tests.factories.base_factory import BaseFactory
 from app.server.models import RobotState
+from tests.factories.base_factory import BaseFactory
 
 
 class RobotFactory(BaseFactory):

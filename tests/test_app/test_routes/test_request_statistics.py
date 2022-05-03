@@ -1,11 +1,12 @@
+from datetime import datetime, timedelta
+
 import pytest
 from pymongo import MongoClient
-from datetime import datetime, timedelta
 from starlette.testclient import TestClient
 
 import app.server.mongo_db as database
 from app.server.app import app as fastapi_app
-from tests.factories import UserFactory, RobotFactory, RequestFactory
+from tests.factories import RequestFactory, RobotFactory, UserFactory
 from tests.functions.mongo_actions import drop_collection, enrich_collection
 
 

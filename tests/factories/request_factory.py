@@ -6,9 +6,9 @@ from app.server.models import Status
 
 faker = faker.Faker()
 
-from tests.factories.base_factory import BaseFactory
-
 from datetime import datetime
+
+from tests.factories.base_factory import BaseFactory
 
 
 class RequestFactory(BaseFactory):
