@@ -3,7 +3,6 @@ from datetime import datetime
 from bson.errors import InvalidId
 from bson.objectid import ObjectId
 
-from app.server.models.request import Status
 from app.server.mongo_db import request_collection
 
 

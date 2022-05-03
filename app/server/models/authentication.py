@@ -1,6 +1,4 @@
 from typing import Optional
-
-from odmantic import Field
 from pydantic import BaseModel
 
 

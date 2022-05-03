@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
-from requests import request
 
 from app.server.models import (
     ErrorResponseModel,

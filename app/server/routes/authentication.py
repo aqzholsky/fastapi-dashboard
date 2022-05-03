@@ -1,9 +1,7 @@
-import re
 from datetime import timedelta
 
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from fastapi.security import OAuth2PasswordRequestForm
 
 from app.server.models import (ErrorResponseModel, Token, UserLogin,
                                UserRegistration)

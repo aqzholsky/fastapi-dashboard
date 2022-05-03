@@ -8,7 +8,7 @@ faker = faker.Faker()
 
 from tests.factories.base_factory import BaseFactory
 
-
+from datetime import datetime
 class RequestFactory(BaseFactory):
     def generate_data(*args, **kwargs):
         return {
@@ -28,4 +28,5 @@ class RequestFactory(BaseFactory):
             "result": kwargs.get("result") or faker.url(),
             "user_id": kwargs.get("user_id"),
             "robot_id": kwargs.get("robot_id"),
+            "created_at": kwargs.get("created_at"),
         }

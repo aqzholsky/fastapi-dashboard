@@ -9,3 +9,4 @@ services:
       - ~/apps/mongo:/data/db
     env_file:
       - .env
+# build: ./mongodb

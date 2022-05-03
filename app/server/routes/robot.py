@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
 
-from app.server.models import (ErrorResponseModel, RequestSchema,
-                               RequestUpdateSchema, ResponseModel, Robot, User, RobotState)
+from app.server.models import (ErrorResponseModel, ResponseModel, Robot, User, RobotState)
 from app.server.repository import (add_robot, delete_robot, get_current_user,
                                    retrieve_robot, retrieve_robots,
                                    update_robot)

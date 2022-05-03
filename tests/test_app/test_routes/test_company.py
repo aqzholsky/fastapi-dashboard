@@ -4,8 +4,7 @@ from starlette.testclient import TestClient
 
 import app.server.mongo_db as database
 from app.server.app import app as fastapi_app
-from tests.factories.company_factory import CompanyFactory
-from tests.factories.user_factory import UserFactory
+from tests.factories import CompanyFactory, UserFactory
 from tests.functions.mongo_actions import drop_collection, enrich_collection
 
 

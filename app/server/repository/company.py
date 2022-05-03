@@ -2,7 +2,7 @@ from bson.errors import InvalidId
 from bson.objectid import ObjectId
 
 from app.server.mongo_db import company_collection
-from tests.factories.company_factory import CompanyFactory
+from tests.factories import CompanyFactory
 
 
 def company_helper(company):

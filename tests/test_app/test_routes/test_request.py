@@ -4,8 +4,7 @@ from starlette.testclient import TestClient
 
 import app.server.mongo_db as database
 from app.server.app import app as fastapi_app
-from tests.factories.request_factory import RequestFactory
-from tests.factories.user_factory import UserFactory
+from tests.factories import RequestFactory, UserFactory
 from tests.functions.mongo_actions import drop_collection, enrich_collection
 
 
@@ -73,6 +72,8 @@ class TestRequestRouter:
 
         actual = response.json()
         for key, value in request_data.items():
+            if key == "created_at":
+                continue
             assert actual[key] == value
         assert response.status_code == 201
 
