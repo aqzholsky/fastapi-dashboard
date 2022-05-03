@@ -3,9 +3,10 @@ from datetime import datetime
 from enum import Enum
 from functools import reduce
 from operator import add, mul
+from tkinter.messagebox import NO
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr, Field, ValidationError, validator
+from pydantic import BaseModel, Field, ValidationError, validator
 
 
 class Status(str, Enum):
@@ -16,17 +17,17 @@ class Status(str, Enum):
 
 
 class RequestSchema(BaseModel):
-    # required
-    first_name: str = Field(...)
-    last_name: str = Field(...)
-    iin: str = Field(...)
+    id: Optional[str] = None
+    first_name: Optional[str] = Field(...)
+    last_name: Optional[str] = Field(...)
+    iin: Optional[str] = Field(...)
+    robot_id: Optional[str] = Field(...)
 
-    # read_only
-    status: Optional[Status] = Field(None)
-    result: str = Field(None)
-    created_at: datetime = Field(None)
+    status: Optional[Status] = None
+    result: Optional[str] = None
+    created_at: Optional[datetime] = None
+    user_id: Optional[str] = None
 
-    # validators
     @validator("iin")
     def validate_iin(cls, iin: str) -> bool:
         def multiply(iin: str, weights: List[int]) -> int:
@@ -52,14 +53,16 @@ class RequestSchema(BaseModel):
                 "first_name": "John",
                 "last_name": "Doe",
                 "iin": "000101400100",
+                "robot_id": "d0055d544c84e4b23438d0055d544c84e4b23438",
             }
         }
 
 
 class RequestUpdateSchema(RequestSchema):
-    first_name: str = Field(None)
-    last_name: str = Field(None)
-    iin: str = Field(None)
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    iin: Optional[str] = None
+    robot_id: Optional[str] = None
 
     class Config:
         schema_extra = {
@@ -68,18 +71,6 @@ class RequestUpdateSchema(RequestSchema):
                 "last_name": "Doe",
                 "iin": "000101400100",
                 "status": "NEW, IN_PROCESS, DONE, FAIL",
-                "created_at": "2022-05-02 00:26:37.660141",
+                "robot_id": "d0055d544c84e4b23438d0055d544c84e4b23438",
             }
         }
-
-
-def ResponseModel(data, message):
-    return {
-        "data": [data],
-        "code": 200,
-        "message": message,
-    }
-
-
-def ErrorResponseModel(error, code, message):
-    return {"error": error, "code": code, "message": message}

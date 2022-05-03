@@ -1,19 +1,15 @@
-# Monkey patch
-from email import header
-from unittest.mock import MagicMock
-
 import pytest
 from pymongo import MongoClient
 from starlette.testclient import TestClient
 
 import app.server.mongo_db as database
 from app.server.app import app as fastapi_app
-from tests.factories.request_factory import RequestFactory
+from tests.factories.company_factory import CompanyFactory
 from tests.factories.user_factory import UserFactory
 from tests.functions.mongo_actions import drop_collection, enrich_collection
 
 
-class TestRequestRouter:
+class TestCompanyRouter:
     @pytest.fixture(autouse=True)
     def db(self):
         mongo_client = MongoClient(database.MONGO_DETAILS)
@@ -22,9 +18,9 @@ class TestRequestRouter:
     @pytest.fixture
     def client(self, db):
         client = TestClient(fastapi_app)
-        enrich_collection(db, "request_collection", RequestFactory)
+        enrich_collection(db, "company_collection", CompanyFactory)
         yield client
-        drop_collection(db, "request_collection")
+        drop_collection(db, "company_collection")
 
     @pytest.fixture
     def user(self, db):
@@ -55,49 +51,41 @@ class TestRequestRouter:
         return {"Authorization": f"Bearer {access_token}"}
 
     @pytest.fixture
-    def user_id(self, register_user):
-        response = register_user
-        print(response.json())
-        return response.json()["id"]
-
-    @pytest.fixture(autouse=True)
-    def enrich_db(self, db, user_id):
-        enrich_collection(
-            db, "robot_collection", RequestFactory, fields={"user_id": user_id}
-        )
-
-    @pytest.fixture
     def id(self, db):
-        return str(getattr(db, "request_collection").find_one()["_id"])
+        return str(getattr(db, "company_collection").find_one()["_id"])
 
     def test_create(self, client, user_authentication_headers):
-        request_data = RequestFactory.create()
+        company_data = CompanyFactory.create()
         response = client.post(
-            f"/request/", json=request_data, headers=user_authentication_headers
+            f"/company/", json=company_data, headers=user_authentication_headers
         )
 
         actual = response.json()
-        for key, value in request_data.items():
+        for key, value in company_data.items():
             assert actual[key] == value
         assert response.status_code == 201
 
+    def test_retrieve_own(self, client, user_authentication_headers):
+        response = client.get(f"/company/own", headers=user_authentication_headers)
+        assert response.status_code == 200
+
     def test_retrieve(self, client, id, user_authentication_headers):
-        response = client.get(f"/request/{id}", headers=user_authentication_headers)
+        response = client.get(f"/company/{id}", headers=user_authentication_headers)
         assert response.status_code == 200
         actual = response.json()
         assert actual["id"] == id
 
     def test_list(self, client, user_authentication_headers):
-        response = client.get("/request/", headers=user_authentication_headers)
+        response = client.get("/company/", headers=user_authentication_headers)
         assert response.status_code == 200
         actual = response.json()
         assert len(actual) != 0
 
     def test_update(self, client, id, user_authentication_headers):
         response = client.put(
-            f"/request/{id}",
+            f"/company/{id}",
             json={
-                "last_name": "Jones",
+                "email": "a@a.vom",
             },
             headers=user_authentication_headers,
         )
@@ -106,7 +94,7 @@ class TestRequestRouter:
 
     def test_delete(self, client, id, user_authentication_headers):
         response = client.delete(
-            f"/request/{id}",
+            f"/company/{id}",
             headers=user_authentication_headers,
         )
         assert response.status_code == 200

@@ -1,19 +1,15 @@
-# Monkey patch
-from email import header
-from unittest.mock import MagicMock
-
 import pytest
 from pymongo import MongoClient
 from starlette.testclient import TestClient
 
 import app.server.mongo_db as database
 from app.server.app import app as fastapi_app
-from tests.factories.request_factory import RequestFactory
+from tests.factories.robot_factory import RobotFactory
 from tests.factories.user_factory import UserFactory
 from tests.functions.mongo_actions import drop_collection, enrich_collection
 
 
-class TestRequestRouter:
+class TestrobotRouter:
     @pytest.fixture(autouse=True)
     def db(self):
         mongo_client = MongoClient(database.MONGO_DETAILS)
@@ -22,9 +18,8 @@ class TestRequestRouter:
     @pytest.fixture
     def client(self, db):
         client = TestClient(fastapi_app)
-        enrich_collection(db, "request_collection", RequestFactory)
         yield client
-        drop_collection(db, "request_collection")
+        drop_collection(db, "robot_collection")
 
     @pytest.fixture
     def user(self, db):
@@ -55,49 +50,52 @@ class TestRequestRouter:
         return {"Authorization": f"Bearer {access_token}"}
 
     @pytest.fixture
-    def user_id(self, register_user):
+    def company_id(self, register_user):
         response = register_user
-        print(response.json())
-        return response.json()["id"]
+        return response.json()["company_id"]
 
     @pytest.fixture(autouse=True)
-    def enrich_db(self, db, user_id):
+    def enrich_db(self, db, company_id):
         enrich_collection(
-            db, "robot_collection", RequestFactory, fields={"user_id": user_id}
+            db, "robot_collection", RobotFactory, fields={"company_id": company_id}
         )
 
     @pytest.fixture
-    def id(self, db):
-        return str(getattr(db, "request_collection").find_one()["_id"])
-
-    def test_create(self, client, user_authentication_headers):
-        request_data = RequestFactory.create()
-        response = client.post(
-            f"/request/", json=request_data, headers=user_authentication_headers
+    def id(self, db, company_id):
+        return str(
+            getattr(db, "robot_collection").find_one({"company_id": company_id})["_id"]
         )
 
+    def test_create(self, client, user_authentication_headers):
+        robot_data = RobotFactory.create()
+        response = client.post(
+            f"/robot/", json=robot_data, headers=user_authentication_headers
+        )
         actual = response.json()
-        for key, value in request_data.items():
+
+        for key, value in robot_data.items():
+            if key == "company_id":
+                continue
             assert actual[key] == value
         assert response.status_code == 201
 
     def test_retrieve(self, client, id, user_authentication_headers):
-        response = client.get(f"/request/{id}", headers=user_authentication_headers)
+        response = client.get(f"/robot/{id}", headers=user_authentication_headers)
         assert response.status_code == 200
         actual = response.json()
         assert actual["id"] == id
 
     def test_list(self, client, user_authentication_headers):
-        response = client.get("/request/", headers=user_authentication_headers)
+        response = client.get("/robot/", headers=user_authentication_headers)
         assert response.status_code == 200
         actual = response.json()
         assert len(actual) != 0
 
     def test_update(self, client, id, user_authentication_headers):
         response = client.put(
-            f"/request/{id}",
+            f"/robot/{id}",
             json={
-                "last_name": "Jones",
+                "email": "a@a.vom",
             },
             headers=user_authentication_headers,
         )
@@ -106,7 +104,7 @@ class TestRequestRouter:
 
     def test_delete(self, client, id, user_authentication_headers):
         response = client.delete(
-            f"/request/{id}",
+            f"/robot/{id}",
             headers=user_authentication_headers,
         )
         assert response.status_code == 200

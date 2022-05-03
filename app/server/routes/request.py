@@ -1,48 +1,80 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
+from requests import request
 
-from app.server.database import (add_request, delete_request, retrieve_request,
-                                 retrieve_requests, update_request)
-from app.server.models.request import (ErrorResponseModel, RequestSchema,
-                                       RequestUpdateSchema, ResponseModel)
+from app.server.models import (ErrorResponseModel, RequestSchema,
+                               RequestUpdateSchema, ResponseModel, Status,
+                               User)
+from app.server.repository import (add_request, delete_request,
+                                   get_current_user, retrieve_request,
+                                   retrieve_requests, update_request)
 
 router = APIRouter()
 
 
 @router.post(
-    "/", response_description="Request data added into the database", status_code=201
+    "/",
+    response_description="Request data added into the database",
+    status_code=201,
+    response_model=RequestSchema,
 )
-async def add_request_data(request: RequestSchema = Body(...)):
+async def add_request_data(
+    request: RequestSchema = Body(...), user: User = Depends(get_current_user)
+):
     request = jsonable_encoder(request)
+    request["user_id"] = user.id
+
+    if not request.get("status"):
+        request["status"] = Status.NEW
+
     new_request = await add_request(request)
-    return ResponseModel(new_request, "Request added successfully.")
+    return new_request
 
 
 @router.get("/", response_description="Requests retrieved")
-async def get_requests():
-    requests = await retrieve_requests()
+async def get_requests(user: User = Depends(get_current_user)):
+    requests = await retrieve_requests(
+        {
+            "user_id": user.id,
+        }
+    )
     if requests:
-        return ResponseModel(requests, "Requests data retrieved successfully")
-    return ResponseModel(requests, "Empty list returned")
+        return requests
+
+    ErrorResponseModel("An error occurred.", 404, "Request doesn't exist.")
 
 
 @router.get("/{id}", response_description="Request data retrieved")
-async def get_request_data(id):
-    request = await retrieve_request(id)
+async def get_request_data(id, user: User = Depends(get_current_user)):
+    request = await retrieve_request(
+        id,
+        {
+            "user_id": user.id,
+        },
+    )
     if request:
-        return ResponseModel(request, "Request data retrieved successfully")
+        return request
     return ErrorResponseModel("An error occurred.", 404, "Request doesn't exist.")
 
 
 @router.put("/{id}")
-async def update_request_data(id: str, req: RequestUpdateSchema = Body(...)):
+async def update_request_data(
+    id: str,
+    req: RequestUpdateSchema = Body(...),
+    user: User = Depends(get_current_user),
+):
+    request = await retrieve_request(id, {"user_id": user.id})
+    if not request:
+        return ErrorResponseModel(
+            "An error occurred",
+            401,
+            "You have no access to change data.",
+        )
+
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_request = await update_request(id, req)
     if updated_request:
-        return ResponseModel(
-            "Request with ID: {} name update is successful".format(id),
-            "Request name updated successfully",
-        )
+        return updated_request
     return ErrorResponseModel(
         "An error occurred",
         404,
@@ -51,7 +83,15 @@ async def update_request_data(id: str, req: RequestUpdateSchema = Body(...)):
 
 
 @router.delete("/{id}", response_description="Request data deleted from the database")
-async def delete_request_data(id: str):
+async def delete_request_data(id: str, user: User = Depends(get_current_user)):
+    request = await retrieve_request(id, {"user_id": user.id})
+    if not request:
+        return ErrorResponseModel(
+            "An error occurred",
+            401,
+            "You have no access to change data.",
+        )
+
     deleted_request = await delete_request(id)
     if deleted_request:
         return ResponseModel(

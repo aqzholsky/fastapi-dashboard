@@ -1,11 +1,9 @@
 import random
 
-from tests.factories.request_factory import RequestFactory
 
-
-def enrich_collection(db, collection_name):
+def enrich_collection(db, collection_name, factory, fields={}):
     getattr(db, collection_name).insert_many(
-        RequestFactory.create_batch(count=random.randint(10, 20))
+        factory.create_batch(count=random.randint(10, 20), **fields)
     )
 
 
