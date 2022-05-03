@@ -1,9 +1,11 @@
 from typing import Optional
 from pydantic import BaseModel
+from bson import ObjectId
 
 
 class User(BaseModel):
     id: Optional[str] = None
+    _id: Optional[ObjectId] = None
     username: Optional[str]
     email: Optional[str] = None
     full_name: Optional[str] = None

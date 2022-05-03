@@ -2,9 +2,14 @@ from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
 
 from app.server.models import Company, ErrorResponseModel, ResponseModel, User
-from app.server.repository import (add_company, delete_company,
-                                   get_current_user, retrieve_companies,
-                                   retrieve_company, update_company)
+from app.server.repository import (
+    add_company,
+    delete_company,
+    get_current_user,
+    retrieve_companies,
+    retrieve_company,
+    update_company,
+)
 
 router = APIRouter()
 

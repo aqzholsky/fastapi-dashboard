@@ -3,10 +3,12 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+
 class RobotState(str, Enum):
     STARTED = "STARTED"
     STOPPED = "STOPPED"
     FAILED = "FAILED"
+
 
 class Robot(BaseModel):
     id: Optional[str] = None

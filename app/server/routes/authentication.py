@@ -3,12 +3,15 @@ from datetime import timedelta
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
-from app.server.models import (ErrorResponseModel, Token, UserLogin,
-                               UserRegistration)
-from app.server.repository import (ACCESS_TOKEN_EXPIRE_MINUTES,
-                                   authenticate_user, create_access_token,
-                                   create_user, get_user,
-                                   retrieve_random_company)
+from app.server.models import ErrorResponseModel, Token, UserLogin, UserRegistration
+from app.server.repository import (
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    authenticate_user,
+    create_access_token,
+    create_user,
+    get_user,
+    retrieve_random_company,
+)
 
 router = APIRouter()
 

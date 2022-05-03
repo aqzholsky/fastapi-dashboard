@@ -1,7 +1,12 @@
 from fastapi import FastAPI
 
-from app.server.routes import (AuthenticationRouter, CompanyRouter,
-                               RequestRouter, RobotRouter, RequestStatisticsRouter)
+from app.server.routes import (
+    AuthenticationRouter,
+    CompanyRouter,
+    RequestRouter,
+    RobotRouter,
+    RequestStatisticsRouter,
+)
 
 app = FastAPI()
 
@@ -11,4 +16,6 @@ app.include_router(
 )
 app.include_router(CompanyRouter, tags=["Company"], prefix="/company")
 app.include_router(RobotRouter, tags=["Robot"], prefix="/robot")
-app.include_router(RequestStatisticsRouter, tags=["Request Statistics"], prefix="/request_statistics")
+app.include_router(
+    RequestStatisticsRouter, tags=["Request Statistics"], prefix="/request_statistics"
+)

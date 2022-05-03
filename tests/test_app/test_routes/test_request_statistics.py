@@ -18,8 +18,9 @@ class TestRequestRouter:
     @pytest.fixture
     def client(self, db):
         client = TestClient(fastapi_app)
-        enrich_collection(db, "request_collection", RobotFactory)
+        enrich_collection(db, "robot_collection", RobotFactory)
         yield client
+        drop_collection(db, "robot_collection")
         drop_collection(db, "request_collection")
 
     @pytest.fixture
@@ -59,7 +60,6 @@ class TestRequestRouter:
     def robot_id(self, db):
         return str(getattr(db, "robot_collection").find_one()["_id"])
 
-
     @pytest.fixture(autouse=True)
     def enrich_db_monthly_data(self, db, user_id, robot_id):
 
@@ -77,29 +77,35 @@ class TestRequestRouter:
         ]
 
         for day in [*this_month_days, *later_month_days]:
-            r = RequestFactory.create_batch(10, user_id=user_id, robot_id=robot_id, created_at=day)
-            getattr(db, "request_collection").insert_many(r)         
+            r = RequestFactory.create_batch(
+                10, user_id=user_id, robot_id=robot_id, created_at=day
+            )
+            getattr(db, "request_collection").insert_many(r)
 
         return this_month_days
 
-    def test_daily_requests_by_status(self, client, user_authentication_headers, robot_id):
+    def test_daily_requests_by_status(
+        self, client, user_authentication_headers, robot_id
+    ):
         request_data = RequestFactory.create()
         response = client.get(
-            f"/request_statistics/daily_requests_by_status/{robot_id}", json=request_data, headers=user_authentication_headers
+            f"/request_statistics/daily_requests_by_status/{robot_id}",
+            json=request_data,
+            headers=user_authentication_headers,
         )
 
-        actual = response.json()
-        print(actual)
-        assert response.status_code == 201
+        # actual = response.json()
+        assert response.status_code == 200
 
+    def test_daily_requests_of_last_month(
+        self, client, user_authentication_headers, robot_id
+    ):
+        request_data = RequestFactory.create()
+        response = client.get(
+            f"/request_statistics/daily_requests_of_last_month/{robot_id}",
+            json=request_data,
+            headers=user_authentication_headers,
+        )
 
-    # def test_daily_requests_of_last_month(self, client, user_authentication_headers, robot_id):
-    #     request_data = RequestFactory.create()
-    #     response = client.get(
-    #         f"/request/", json=request_data, headers=user_authentication_headers
-    #     )
-
-    #     actual = response.json()
-    #     for key, value in request_data.items():
-    #         assert actual[key] == value
-    #     assert response.status_code == 201
+        # actual = response.json()
+        assert response.status_code == 200

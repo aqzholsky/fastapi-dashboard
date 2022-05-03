@@ -9,6 +9,8 @@ faker = faker.Faker()
 from tests.factories.base_factory import BaseFactory
 
 from datetime import datetime
+
+
 class RequestFactory(BaseFactory):
     def generate_data(*args, **kwargs):
         return {
