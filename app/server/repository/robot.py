@@ -12,6 +12,7 @@ def robot_helper(robot):
         "start_time": str(robot.get("start_time")),
         "end_time": str(robot.get("end_time")),
         "company_id": robot.get("company_id"),
+        "state": robot.get("state"),
     }
 
 

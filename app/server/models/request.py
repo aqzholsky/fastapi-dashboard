@@ -22,6 +22,7 @@ class RequestSchema(BaseModel):
     last_name: Optional[str] = Field(...)
     iin: Optional[str] = Field(...)
     robot_id: Optional[str] = Field(...)
+    service_name: Optional[str] = Field(...)
 
     status: Optional[Status] = None
     result: Optional[str] = None
@@ -53,6 +54,7 @@ class RequestSchema(BaseModel):
                 "first_name": "John",
                 "last_name": "Doe",
                 "iin": "000101400100",
+                "service_name": "GET ADDRESS",
                 "robot_id": "d0055d544c84e4b23438d0055d544c84e4b23438",
             }
         }
@@ -63,6 +65,7 @@ class RequestUpdateSchema(RequestSchema):
     last_name: Optional[str] = None
     iin: Optional[str] = None
     robot_id: Optional[str] = None
+    service_name: Optional[str] = None
 
     class Config:
         schema_extra = {

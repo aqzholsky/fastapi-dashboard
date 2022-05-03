@@ -2,12 +2,22 @@ from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
 from requests import request
 
-from app.server.models import (ErrorResponseModel, RequestSchema,
-                               RequestUpdateSchema, ResponseModel, Status,
-                               User)
-from app.server.repository import (add_request, delete_request,
-                                   get_current_user, retrieve_request,
-                                   retrieve_requests, update_request)
+from app.server.models import (
+    ErrorResponseModel,
+    RequestSchema,
+    RequestUpdateSchema,
+    ResponseModel,
+    User,
+    Status,
+)
+from app.server.repository import (
+    add_request,
+    delete_request,
+    get_current_user,
+    retrieve_request,
+    retrieve_requests,
+    update_request,
+)
 
 router = APIRouter()
 
@@ -40,6 +50,20 @@ async def get_requests(user: User = Depends(get_current_user)):
     )
     if requests:
         return requests
+
+    ErrorResponseModel("An error occurred.", 404, "Request doesn't exist.")
+
+
+@router.get("/robot/{robot_id}", response_description="Requests retrieved")
+async def get_robot_requests(robot_id, user: User = Depends(get_current_user)):
+    requests = await retrieve_requests(
+        {
+            "user_id": user.id,
+            "robot_id": robot_id,
+        }
+    )
+    if requests:
+        return requests[:100]
 
     ErrorResponseModel("An error occurred.", 404, "Request doesn't exist.")
 

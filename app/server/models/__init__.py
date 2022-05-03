@@ -2,7 +2,7 @@ from .authentication import (Token, TokenData, User, UserInDB, UserLogin,
                              UserRegistration)
 from .company import Company
 from .request import RequestSchema, RequestUpdateSchema, Status
-from .robot import Robot
+from .robot import Robot, RobotState
 
 
 def ResponseModel(data, message):

@@ -13,6 +13,7 @@ def request_helper(request) -> dict:
         "first_name": request["first_name"],
         "last_name": request["last_name"],
         "iin": request["iin"],
+        "service_name": request.get("service_name"),
         "status": request.get("status"),
         "result": request.get("result"),
         "created_at": request.get("created_at"),

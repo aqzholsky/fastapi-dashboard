@@ -24,6 +24,7 @@ class RequestFactory(BaseFactory):
                     Status.FAIL.value,
                 ]
             ),
+            "service_name": kwargs.get("service_name") or faker.text(),
             "result": kwargs.get("result") or faker.url(),
             "user_id": kwargs.get("user_id"),
             "robot_id": kwargs.get("robot_id"),

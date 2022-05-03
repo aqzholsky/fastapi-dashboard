@@ -9,7 +9,7 @@ from tests.factories.user_factory import UserFactory
 from tests.functions.mongo_actions import drop_collection, enrich_collection
 
 
-class TestrobotRouter:
+class TestRobotRouter:
     @pytest.fixture(autouse=True)
     def db(self):
         mongo_client = MongoClient(database.MONGO_DETAILS)

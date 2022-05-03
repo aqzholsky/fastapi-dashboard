@@ -1,7 +1,3 @@
-# Monkey patch
-from email import header
-from unittest.mock import MagicMock
-
 import pytest
 from pymongo import MongoClient
 from starlette.testclient import TestClient
@@ -57,7 +53,6 @@ class TestRequestRouter:
     @pytest.fixture
     def user_id(self, register_user):
         response = register_user
-        print(response.json())
         return response.json()["id"]
 
     @pytest.fixture(autouse=True)
