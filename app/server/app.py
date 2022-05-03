@@ -7,6 +7,9 @@ from app.server.routes import (
     RobotRouter,
     RequestStatisticsRouter,
 )
+from app.server.routes import (AuthenticationRouter, CompanyRouter,
+                               RequestRouter, RobotRouter, RequestStatisticsRouter)
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -19,3 +22,22 @@ app.include_router(RobotRouter, tags=["Robot"], prefix="/robot")
 app.include_router(
     RequestStatisticsRouter, tags=["Request Statistics"], prefix="/request_statistics"
 )
+app.include_router(RequestStatisticsRouter, tags=["Request Statistics"], prefix="/request_statistics")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*", "http://localhost:4200"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/", tags=["Root"])
+async def read_root():
+    return {"message": "Welcome to this fantastic app!"}
+
+
+@app.get("/ping")
+def pong():
+    return {"ping": "pong!"}
