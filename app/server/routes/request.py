@@ -1,10 +1,17 @@
-from fastapi import APIRouter, Body, Depends
+import shutil
+import pandas as pd
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+from typing import Callable, List
+
+from pydantic import ValidationError
+from fastapi import APIRouter, Body, Depends, UploadFile, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
 from app.server.models import (ErrorResponseModel, RequestSchema,
-                               RequestUpdateSchema, ResponseModel, Status,
-                               User)
-from app.server.repository import (add_request, delete_request,
+                               RequestSchemaList, RequestUpdateSchema,
+                               ResponseModel, Status, User)
+from app.server.repository import (add_request, bulk_insert, delete_request,
                                    get_current_user, retrieve_request,
                                    retrieve_requests, update_request)
 
@@ -30,6 +37,48 @@ async def add_request_data(
     return new_request
 
 
+@router.post(
+    "/bulk_create",
+    response_description="Request data added into the database",
+    status_code=201,
+    response_model=List[RequestSchema],
+)
+async def insert_file_data(
+    robot_id: str,
+    file: UploadFile,
+    user: User = Depends(get_current_user)
+):
+    try:
+        suffix = Path(file.filename).suffix
+        with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            shutil.copyfileobj(file.file, tmp)
+            tmp_path = Path(tmp.name)
+    finally:
+        file.file.close()
+
+    try:
+        if suffix == '.xlsx':
+            requests_df = pd.read_excel(tmp_path, sheet_name=0, dtype=str)
+        elif suffix == '.csv':
+            requests_df = pd.read_csv(tmp_path, encoding='utf-8', delimiter=';', dtype=str)
+            requests_df = requests_df.dropna(axis=0)
+        else:
+            raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                                detail='Неправильный тип файла')
+
+        requests_df['robot_id'] = robot_id
+        requests_df["user_id"] = user.id
+        requests_df["status"] = Status.NEW
+        requests = requests_df.to_dict('records')
+
+        requests = RequestSchemaList(__root__=requests)
+        requests = jsonable_encoder(requests)
+        return await bulk_insert(requests)
+    except ValidationError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail='Неправильные имена колонок')
+
+
 @router.get("/", response_description="Requests retrieved")
 async def get_requests(user: User = Depends(get_current_user)):
     requests = await retrieve_requests(
@@ -47,7 +96,7 @@ async def get_requests(user: User = Depends(get_current_user)):
 async def get_robot_requests(robot_id, user: User = Depends(get_current_user)):
     requests = await retrieve_requests(
         {
-            "user_id": user.id,
+            # "user_id": user.id,
             "robot_id": robot_id,
         }
     )

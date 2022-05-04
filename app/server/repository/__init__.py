@@ -5,7 +5,7 @@ from .authentication import (ACCESS_TOKEN_EXPIRE_MINUTES, authenticate_user,
 from .company import (add_company, company_helper, delete_company,
                       retrieve_companies, retrieve_company,
                       retrieve_random_company, update_company)
-from .request import (add_request, delete_request, request_helper,
+from .request import (add_request, bulk_insert, delete_request, request_helper,
                       retrieve_request, retrieve_requests, update_request)
 from .request_statistics import (daily_requests_by_status,
                                  daily_requests_of_last_month,

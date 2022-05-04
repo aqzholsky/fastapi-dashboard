@@ -59,6 +59,10 @@ class RequestSchema(BaseModel):
         }
 
 
+class RequestSchemaList(BaseModel):
+    __root__: List[RequestSchema]
+
+
 class RequestUpdateSchema(RequestSchema):
     first_name: Optional[str] = None
     last_name: Optional[str] = None

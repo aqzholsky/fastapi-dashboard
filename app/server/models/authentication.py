@@ -1,12 +1,11 @@
 from typing import Optional
 
 from bson import ObjectId
-from pydantic import BaseModel
+from pydantic import BaseModel, UUID1
 
 
 class User(BaseModel):
     id: Optional[str] = None
-    _id: Optional[ObjectId] = None
     username: Optional[str]
     email: Optional[str] = None
     full_name: Optional[str] = None

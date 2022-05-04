@@ -34,6 +34,18 @@ async def add_request(request_data: dict) -> dict:
     return request_helper(new_request)
 
 
+async def bulk_insert(requests: list) -> list[dict]:
+    created_at = datetime.now()
+    for r in requests:
+        r["created_at"] = created_at
+    await request_collection.insert_many(requests)
+
+    new_requests = []
+    async for request in request_collection.find({"created_at": created_at}):
+        new_requests.append(request_helper(request))
+    return new_requests
+
+
 async def retrieve_request(id: str, lookup={}) -> dict:
     try:
         new_lookup = {"_id": ObjectId(id)}
