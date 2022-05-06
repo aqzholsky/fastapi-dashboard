@@ -9,6 +9,7 @@ REQUEST_COLLECTION_NAME = "request_collection"
 USER_COLLECTION_NAME = "user_collection"
 COMPANY_COLLECTION_NAME = "company_collection"
 ROBOT_COLLECTION_NAME = "robot_collection"
+ROBOT_STARTER = "robot_starter"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
@@ -20,3 +21,4 @@ request_collection = database.get_collection(REQUEST_COLLECTION_NAME)
 user_collection = database.get_collection(USER_COLLECTION_NAME)
 company_collection = database.get_collection(COMPANY_COLLECTION_NAME)
 robot_collection = database.get_collection(ROBOT_COLLECTION_NAME)
+robot_starter = database.get_collection(ROBOT_STARTER)

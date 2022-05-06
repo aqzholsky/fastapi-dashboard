@@ -3,7 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.server.routes import (AuthenticationRouter, CompanyRouter,
                                RequestRouter, RequestStatisticsRouter,
-                               RobotRouter)
+                               RobotRouter, RobotStarterRouter)
 
 app = FastAPI()
 
@@ -17,6 +17,7 @@ app.include_router(
     RequestStatisticsRouter, tags=["Request Statistics"], prefix="/request_statistics"
 )
 app.include_router(RequestStatisticsRouter, tags=["Request Statistics"], prefix="/request_statistics")
+app.include_router(RobotStarterRouter, tags=["Robot Starter"], prefix="/robot_starter")
 
 app.add_middleware(
     CORSMiddleware,

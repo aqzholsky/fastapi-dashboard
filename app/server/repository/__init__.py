@@ -13,3 +13,5 @@ from .request_statistics import (daily_requests_by_status,
                                  help_daily_requests_of_last_month)
 from .robot import (add_robot, delete_robot, retrieve_robot, retrieve_robots,
                     robot_helper, update_robot)
+
+from .robot_starter import set_robot_starter
