@@ -14,4 +14,4 @@ from .request_statistics import (daily_requests_by_status,
 from .robot import (add_robot, delete_robot, retrieve_robot, retrieve_robots,
                     robot_helper, update_robot)
 
-from .robot_starter import set_robot_starter
+from .robot_state import get_robot_state, update_robot_state

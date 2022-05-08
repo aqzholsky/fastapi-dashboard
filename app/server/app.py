@@ -17,7 +17,7 @@ app.include_router(
     RequestStatisticsRouter, tags=["Request Statistics"], prefix="/request_statistics"
 )
 app.include_router(RequestStatisticsRouter, tags=["Request Statistics"], prefix="/request_statistics")
-app.include_router(RobotStarterRouter, tags=["Robot Starter"], prefix="/robot_starter")
+app.include_router(RobotStarterRouter, tags=["Robot State"], prefix="/robot_state")
 
 app.add_middleware(
     CORSMiddleware,
