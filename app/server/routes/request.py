@@ -1,12 +1,16 @@
+import copy
+import io
 import shutil
-import pandas as pd
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Callable, List
 
-from pydantic import ValidationError
-from fastapi import APIRouter, Body, Depends, UploadFile, HTTPException, status
+import pandas
+import pandas as pd
+from fastapi import APIRouter, Body, Depends, HTTPException, UploadFile, status
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import StreamingResponse
+from pydantic import ValidationError
 
 from app.server.models import (ErrorResponseModel, RequestSchema,
                                RequestSchemaList, RequestUpdateSchema,
@@ -37,6 +41,33 @@ async def add_request_data(
     return new_request
 
 
+@router.get("/get_report/{robot_id}")
+async def get_report(robot_id, user: User = Depends(get_current_user)):
+    def remove_keys(data):
+        title = ['first_name', 'last_name', 'iin', 'status']
+
+        data_copy = copy.copy(data)
+        for key in data_copy:
+            if key not in title:
+                del data[key]
+        return data
+
+    requests = await retrieve_requests({
+        "robot_id": robot_id
+    })
+
+    requests = list(map(remove_keys, requests))
+
+    df = pandas.DataFrame(requests)
+    stream = io.StringIO()
+    df.to_csv(stream, index=False)
+
+    response = StreamingResponse(iter([stream.getvalue()]), media_type="text/csv")
+
+    response.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    return response
+
+
 @router.post(
     "/bulk_create",
     response_description="Request data added into the database",
@@ -44,9 +75,7 @@ async def add_request_data(
     response_model=List[RequestSchema],
 )
 async def insert_file_data(
-    robot_id: str,
-    file: UploadFile,
-    user: User = Depends(get_current_user)
+    robot_id: str, file: UploadFile, user: User = Depends(get_current_user)
 ):
     try:
         suffix = Path(file.filename).suffix
@@ -57,26 +86,31 @@ async def insert_file_data(
         file.file.close()
 
     try:
-        if suffix == '.xlsx':
+        if suffix == ".xlsx":
             requests_df = pd.read_excel(tmp_path, sheet_name=0, dtype=str)
-        elif suffix == '.csv':
-            requests_df = pd.read_csv(tmp_path, encoding='utf-8', delimiter=';', dtype=str)
+        elif suffix == ".csv":
+            requests_df = pd.read_csv(
+                tmp_path, encoding="utf-8", delimiter=";", dtype=str
+            )
             requests_df = requests_df.dropna(axis=0)
         else:
-            raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-                                detail='Неправильный тип файла')
+            raise HTTPException(
+                status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                detail="Неправильный тип файла",
+            )
 
-        requests_df['robot_id'] = robot_id
+        requests_df["robot_id"] = robot_id
         requests_df["user_id"] = user.id
         requests_df["status"] = Status.NEW
-        requests = requests_df.to_dict('records')
+        requests = requests_df.to_dict("records")
 
         requests = RequestSchemaList(__root__=requests)
         requests = jsonable_encoder(requests)
         return await bulk_insert(requests)
     except ValidationError:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail='Неправильные имена колонок')
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Неправильные имена колонок"
+        )
 
 
 @router.get("/", response_description="Requests retrieved")

@@ -95,8 +95,8 @@ class TestRequestRouter:
             headers=user_authentication_headers,
         )
 
-        # actual = response.json()
-        assert response.status_code == 200
+        print(response.json())
+        assert response.status_code == 201
 
     def test_daily_requests_of_last_month(
         self, client, user_authentication_headers, robot_id
@@ -108,5 +108,5 @@ class TestRequestRouter:
             headers=user_authentication_headers,
         )
 
-        # actual = response.json()
-        assert response.status_code == 200
+        print(response.json())
+        assert response.status_code == 201

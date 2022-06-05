@@ -34,7 +34,7 @@ async def add_request(request_data: dict) -> dict:
     return request_helper(new_request)
 
 
-async def bulk_insert(requests: list) -> list[dict]:
+async def bulk_insert(requests: list):
     created_at = datetime.now()
     for r in requests:
         r["created_at"] = created_at
