@@ -1,0 +1,88 @@
+.file-drop-area {
+    position: relative;
+    display: flex;
+    width: 99%;
+    height: 80%;
+    max-width: 100%;
+    padding: 25px;
+    border: 1px dashed black;
+    border-radius: 3px;
+    transition: 0.2s;
+    flex-direction: column;
+    align-items: flex-start;
+    vertical-align: center;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.file-send-area {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    vertical-align: center;
+}
+
+.file_upload_icon{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80px;
+    height: 80px;
+    opacity: 0.5;
+}
+
+.choose-file-button {
+    flex-shrink: 0;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 8px 15px;
+    margin-right: 10px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.file-message {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 10px;
+
+}
+
+.file_upload_btn {
+    width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.file-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    opacity: 0;
+
+}
+
+.mt-100{
+    margin-top:100px;
+}
+
+
+.upload_modal_btn{
+    width: 150px;
+    height: 70px;
+    color: black;
+    font-size: 20px;
+}

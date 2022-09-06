@@ -1,0 +1,47 @@
+{
+    "image": "iVBORw0KGgoAAAANSUhEUgAAAZIAAABgCAIAAAC4zWMLAAABXElEQVR4nO3UMQ3AQBDAsGuPP9XHUAydXpFsBJnynHMGoGB3Z+a9nQHwj20BMbYFxNgWEGNbQIxtATG2BcTYFhBjW0CMbQExtgXE2BYQY1tAjG0BMbYFxNgWEGNbQIxtATG2BcTYFhBjW0CMbQExtgXE2BYQY1tAjG0BMbYFxNgWEGNbQIxtATG2BcTYFhBjW0CMbQExtgXE2BYQY1tAjG0BMbYFxNgWEGNbQIxtATG2BcTYFhBjW0CMbQExtgXE2BYQY1tAjG0BMbYFxNgWEGNbQIxtATG2BcTYFhBjW0CMbQExtgXE2BYQY1tAjG0BMbYFxNgWEGNbQIxtATG2BcTYFhBjW0CMbQExtgXE2BYQY1tAjG0BMbYFxNgWEGNbQIxtATG2BcTYFhBjW0CMbQExtgXE2BYQY1tAjG0BMbYFxNgWEGNbQIxtATG2BcTYFhBjW0CMbQExtgXEfPWRA5PQ8XdFAAAAAElFTkSuQmCC",
+    "mouse_coords": {
+        "x": 1662,
+        "y": 359
+    },
+    "path": {
+        "0": {
+            "automation_id": "CalculatorResults",
+            "class_name": "",
+            "control_type": "Text",
+            "handle": null,
+            "parent_index": 0,
+            "title": "\u041e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0442\u044c \u043a\u0430\u043a 0",
+            "top_parent_index": 0
+        },
+        "1": {
+            "automation_id": "",
+            "class_name": "LandmarkTarget",
+            "control_type": "Group",
+            "handle": null,
+            "parent_index": 0,
+            "title": "",
+            "top_parent_index": 0
+        },
+        "2": {
+            "automation_id": "",
+            "class_name": "Windows.UI.Core.CoreWindow",
+            "control_type": "Window",
+            "handle": 721486,
+            "parent_index": 0,
+            "title": "\u041a\u0430\u043b\u044c\u043a\u0443\u043b\u044f\u0442\u043e\u0440",
+            "top_parent_index": 0
+        },
+        "3": {
+            "class_name": "ApplicationFrameWindow",
+            "control_type": "Window",
+            "title": "\u041a\u0430\u043b\u044c\u043a\u0443\u043b\u044f\u0442\u043e\u0440"
+        }
+    },
+    "rect": {
+        "B": 441,
+        "L": 1499,
+        "R": 1901,
+        "T": 345
+    }
+}

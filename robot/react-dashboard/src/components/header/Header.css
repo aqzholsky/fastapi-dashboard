@@ -1,0 +1,23 @@
+.header_li {
+    -ms-flex-align: center!important;
+    align-items: center!important;
+    display: flex;
+    justify-content: center;
+}
+
+.header_link {
+    font-size: 30px;
+}
+
+.robot_header {
+    background-color: aliceblue;
+}
+
+.header_style {
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    -webkit-box-shadow: 0 4px 12px -1px gainsboro;
+    -moz-box-shadow: 0 4px 12px -1px gainsboro;
+    box-shadow: 0 4px 12px -1px gainsboro;
+}
